@@ -12,12 +12,14 @@ const sizeInput = document.getElementById("sizeInput");
             const count3dLabel = document.getElementById("count3dLabel");
             const rotationToggle = document.getElementById("rotationToggle");
             const speedCycleButton = document.getElementById("speedCycleButton");
+            const measureToggle = document.getElementById("measureToggle");
             const infoButton = document.getElementById("infoButton");
             const infoModal = document.getElementById("infoModal");
             const infoClose = document.getElementById("infoClose");
 
             let mode = "2d";
             let isRotationPlaying = true;
+            let showMeasurements = true;
             let speedLevel = 1;
             let audioContext;
             let renderTimer;
@@ -61,6 +63,7 @@ const sizeInput = document.getElementById("sizeInput");
                     size,
                     speedLevel,
                     isRotationPlaying,
+                    showMeasurements,
                 };
 
                 localStorage.setItem(storageKey, JSON.stringify(settings));
@@ -74,6 +77,7 @@ const sizeInput = document.getElementById("sizeInput");
                     const settings = JSON.parse(saved);
                     mode = settings.mode === "3d" ? "3d" : "2d";
                     isRotationPlaying = settings.isRotationPlaying !== false;
+                    showMeasurements = settings.showMeasurements !== false;
                     speedLevel = getSavedSpeedLevel(settings);
                     sizeInput.max = getMaxSize();
                     sizeInput.value = clampSize(settings.size || 5);
@@ -162,6 +166,17 @@ const sizeInput = document.getElementById("sizeInput");
                 visual.style.setProperty("--rotation-state", "running");
                 rotationToggle.textContent = "■";
                 rotationToggle.setAttribute("aria-label", "Stop rotation");
+            }
+
+            function updateMeasurementToggle() {
+                measureToggle.classList.toggle("active", showMeasurements);
+                measureToggle.setAttribute("aria-pressed", String(showMeasurements));
+                measureToggle.setAttribute(
+                    "aria-label",
+                    showMeasurements
+                        ? "Hide measurement guide"
+                        : "Show measurement guide",
+                );
             }
 
             function getActiveObject() {
@@ -272,7 +287,17 @@ const sizeInput = document.getElementById("sizeInput");
                 grid.style.setProperty("--cell-size", `${cellSize}px`);
                 grid.style.gridTemplateColumns = `repeat(${size}, ${cellSize}px)`;
                 grid.style.gridTemplateRows = `repeat(${size}, ${cellSize}px)`;
+                if (showMeasurements) {
+                    grid.appendChild(
+                        createDimensionLine(
+                            size,
+                            "SQUARE EDGE MEASURE",
+                            "square-measure",
+                        ),
+                    );
+                }
                 visual.appendChild(grid);
+                if (showMeasurements) animateDimensionLine(grid, size);
             }
 
             function render3D(size) {
@@ -297,27 +322,29 @@ const sizeInput = document.getElementById("sizeInput");
                     },
                 );
 
-                cube.appendChild(createDimensionLine(size));
+                if (showMeasurements) {
+                    cube.appendChild(createDimensionLine(size, "FRONT EDGE MEASURE"));
+                }
 
                 visual.appendChild(cube);
-                animateDimensionLine(cube, size);
+                if (showMeasurements) animateDimensionLine(cube, size);
             }
 
-            function createDimensionLine(size) {
+            function createDimensionLine(size, noteText, extraClass = "") {
                 const line = document.createElement("div");
                 const label = document.createElement("div");
                 const rail = document.createElement("div");
                 const scanDot = document.createElement("div");
                 const note = document.createElement("div");
 
-                line.className = "dimension-line counting";
+                line.className = `dimension-line counting ${extraClass}`.trim();
                 label.className = "dimension-label";
                 rail.className = "dimension-rail";
                 scanDot.className = "scan-dot";
                 note.className = "dimension-note";
 
                 label.innerHTML = `EDGE <strong>${size}</strong> BLOCKS`;
-                note.textContent = "FRONT EDGE MEASURE";
+                note.textContent = noteText;
 
                 for (let i = 0; i <= size; i += 1) {
                     const tick = document.createElement("span");
@@ -455,6 +482,13 @@ const sizeInput = document.getElementById("sizeInput");
                 saveSettings();
             }
 
+            function toggleMeasurements() {
+                showMeasurements = !showMeasurements;
+                playSound("mode");
+                updateMeasurementToggle();
+                render();
+            }
+
             function changeSize(delta) {
                 const current = sizeInput.value === "" ? 1 : clampSize(sizeInput.value);
                 const next = Math.max(1, Math.min(getMaxSize(), current + delta));
@@ -544,6 +578,7 @@ const sizeInput = document.getElementById("sizeInput");
             speedCycleButton.addEventListener("click", () => {
                 setSpeedLevel(speedLevel === 4 ? 1 : speedLevel + 1);
             });
+            measureToggle.addEventListener("click", toggleMeasurements);
             infoButton.addEventListener("click", openInfoModal);
             infoClose.addEventListener("click", closeInfoModal);
             infoModal.addEventListener("click", (event) => {
@@ -566,4 +601,5 @@ const sizeInput = document.getElementById("sizeInput");
             loadSettings();
             render();
             updateRotationSpeed();
+            updateMeasurementToggle();
             requestAnimationFrame(updateFps);

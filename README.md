@@ -15,10 +15,12 @@ This is a pure HTML, CSS, and JavaScript learning tool that helps children see h
 - Visualizes cube volume as `edge x edge x edge`.
 - Shows a large animated 2D square grid and 3D cube.
 - Highlights the active calculation mode: `SQUARE AREA` or `CUBE VOLUME`.
-- Includes cube edge measurement guides so children can feel the meaning of edge length.
+- Includes square and cube edge measurement guides so children can feel the meaning of edge length.
+- Provides an eye toggle for showing or hiding measurement guides.
 - Supports mouse and touch drag rotation for the 3D object.
 - Automatically resumes rotation after interaction.
 - Provides play/pause and speed cycle controls.
+- Shows keyboard shortcuts in a NASA-style info modal.
 - Provides keyboard shortcuts for fast control.
 - Shows FPS and block count readouts.
 - Saves normal settings in local storage.
@@ -67,10 +69,12 @@ This tool is designed for young children who are beginning to understand shape, 
 - 정육면체 부피를 `한 변 x 한 변 x 한 변`으로 보여줍니다.
 - 2D 정사각형 격자와 3D 큐브를 크게 시각화합니다.
 - 현재 선택한 모드에 따라 `SQUARE AREA` 또는 `CUBE VOLUME` 카드를 강조합니다.
-- 큐브 한 변의 길이를 계측선으로 보여줘서 길이 변화를 직관적으로 느낄 수 있습니다.
+- 정사각형과 큐브 한 변의 길이를 계측선으로 보여줘서 길이 변화를 직관적으로 느낄 수 있습니다.
+- 눈 아이콘 토글로 계측선을 보이거나 숨길 수 있습니다.
 - 마우스와 터치로 3D 물체를 직접 회전할 수 있습니다.
 - 조작이 끝나면 자동 회전이 다시 시작됩니다.
 - 재생/정지 버튼과 회전 속도 순환 버튼을 제공합니다.
+- NASA 스타일 정보 모달에서 키보드 단축키를 확인할 수 있습니다.
 - 빠른 조작을 위한 키보드 단축키를 제공합니다.
 - FPS와 블록 개수를 화면에 표시합니다.
 - 일반 새로고침 후에도 설정을 로컬 스토리지에 저장합니다.
