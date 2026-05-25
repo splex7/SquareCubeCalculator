@@ -12,6 +12,9 @@ const sizeInput = document.getElementById("sizeInput");
             const count3dLabel = document.getElementById("count3dLabel");
             const rotationToggle = document.getElementById("rotationToggle");
             const speedCycleButton = document.getElementById("speedCycleButton");
+            const infoButton = document.getElementById("infoButton");
+            const infoModal = document.getElementById("infoModal");
+            const infoClose = document.getElementById("infoClose");
 
             let mode = "2d";
             let isRotationPlaying = true;
@@ -462,7 +465,31 @@ const sizeInput = document.getElementById("sizeInput");
                 render();
             }
 
+            function openInfoModal() {
+                infoModal.classList.add("is-open");
+                infoModal.setAttribute("aria-hidden", "false");
+                infoClose.focus();
+            }
+
+            function closeInfoModal() {
+                infoModal.classList.remove("is-open");
+                infoModal.setAttribute("aria-hidden", "true");
+                infoButton.focus();
+            }
+
+            function isInfoModalOpen() {
+                return infoModal.classList.contains("is-open");
+            }
+
             function handleKeyboardShortcuts(event) {
+                if (isInfoModalOpen()) {
+                    if (event.key === "Escape") {
+                        event.preventDefault();
+                        closeInfoModal();
+                    }
+                    return;
+                }
+
                 if (event.metaKey || event.ctrlKey || event.altKey) return;
 
                 if (event.key === "ArrowUp") {
@@ -516,6 +543,11 @@ const sizeInput = document.getElementById("sizeInput");
             rotationToggle.addEventListener("click", toggleRotation);
             speedCycleButton.addEventListener("click", () => {
                 setSpeedLevel(speedLevel === 4 ? 1 : speedLevel + 1);
+            });
+            infoButton.addEventListener("click", openInfoModal);
+            infoClose.addEventListener("click", closeInfoModal);
+            infoModal.addEventListener("click", (event) => {
+                if (event.target === infoModal) closeInfoModal();
             });
             sizeInput.addEventListener("blur", () => {
                 if (sizeInput.value === "") {

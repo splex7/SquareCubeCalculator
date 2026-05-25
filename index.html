@@ -8,6 +8,14 @@
         <script src="script.js" defer></script>
     </head>
     <body>
+        <button
+            id="infoButton"
+            class="info-button"
+            type="button"
+            aria-label="Show keyboard shortcut information"
+        >
+            i
+        </button>
         <main class="app">
             <section class="panel">
                 <div class="label-top">CONTROL</div>
@@ -81,5 +89,59 @@
                 </div>
             </section>
         </main>
+        <div id="infoModal" class="info-modal" aria-hidden="true">
+            <div
+                class="info-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="infoTitle"
+            >
+                <button
+                    id="infoClose"
+                    class="info-close"
+                    type="button"
+                    aria-label="Close shortcut information"
+                >
+                    X
+                </button>
+                <div class="modal-label">MISSION CONTROLS</div>
+                <h2 id="infoTitle">KEYBOARD SHORTCUTS</h2>
+                <p class="info-subtitle">NASA STYLE QUICK COMMAND PANEL</p>
+                <div class="shortcut-list">
+                    <div class="shortcut-row">
+                        <div class="shortcut-keys two-keys">
+                            <kbd>UP</kbd>
+                            <kbd>DOWN</kbd>
+                        </div>
+                        <span>EDGE LENGTH UP / DOWN</span>
+                    </div>
+                    <div class="shortcut-row">
+                        <div class="shortcut-keys two-keys">
+                            <kbd>RIGHT</kbd>
+                            <kbd>LEFT</kbd>
+                        </div>
+                        <span>ROTATION SPEED UP / DOWN</span>
+                    </div>
+                    <div class="shortcut-row">
+                        <div class="shortcut-keys one-key">
+                            <kbd>SPACE</kbd>
+                        </div>
+                        <span>PLAY / STOP ROTATION</span>
+                    </div>
+                    <div class="shortcut-row">
+                        <div class="shortcut-keys one-key">
+                            <kbd>ENTER</kbd>
+                        </div>
+                        <span>TOGGLE SQUARE / CUBE</span>
+                    </div>
+                    <div class="shortcut-row">
+                        <div class="shortcut-keys one-key">
+                            <kbd>ESC</kbd>
+                        </div>
+                        <span>CLOSE THIS PANEL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
