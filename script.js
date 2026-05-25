@@ -495,7 +495,7 @@ const sizeInput = document.getElementById("sizeInput");
                     return;
                 }
 
-                if (event.key.toLowerCase() === "t") {
+                if (event.key === "Enter") {
                     event.preventDefault();
                     selectMode(mode === "2d" ? "3d" : "2d");
                 }

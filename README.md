@@ -36,7 +36,7 @@ This is a pure HTML, CSS, and JavaScript learning tool that helps children see h
 - `Arrow Up` / `Arrow Down`: Increase or decrease edge length.
 - `Arrow Right` / `Arrow Left`: Increase or decrease rotation speed.
 - `Space`: Play or stop rotation.
-- `T`: Toggle display mode.
+- `Enter`: Toggle display mode.
 
 ## Files
 
@@ -88,7 +88,7 @@ This tool is designed for young children who are beginning to understand shape, 
 - `Arrow Up` / `Arrow Down`: 한 변의 길이를 늘리거나 줄입니다.
 - `Arrow Right` / `Arrow Left`: 회전 속도를 높이거나 낮춥니다.
 - `Space`: 회전을 재생하거나 정지합니다.
-- `T`: 디스플레이 모드를 전환합니다.
+- `Enter`: 디스플레이 모드를 전환합니다.
 
 ## 파일 구성
 
