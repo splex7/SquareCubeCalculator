@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Square Cube Calculator</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script src="script.js" defer></script>
+    </head>
+    <body>
+        <main class="app">
+            <section class="panel">
+                <div class="label-top">CONTROL</div>
+                <h1>SQUARE<br />CUBE CALCULATOR</h1>
+                <div class="subtitle">AREA AND VOLUME VISUALIZER</div>
+
+                <div class="control edge-control">
+                    <label for="sizeInput" class="input-label">
+                        <span>INPUT // EDGE LENGTH</span>
+                        <small>BLOCKS PER SIDE</small>
+                    </label>
+                    <input
+                        id="sizeInput"
+                        type="number"
+                        min="1"
+                        max="40"
+                        value="5"
+                    />
+                    <div id="warning" class="warning"></div>
+                </div>
+
+                <div class="control">
+                    <label>DISPLAY MODE</label>
+                    <div class="mode-switch">
+                        <button id="mode2d" class="active">SQUARE</button>
+                        <button id="mode3d">CUBE</button>
+                    </div>
+                </div>
+
+                <div class="count-board formula-panel">
+                    <div id="count2dCard" class="count-card active">
+                        <span>SQUARE AREA</span>
+                        <strong id="count2dLabel">5 x 5 = 25</strong>
+                        <small>BLOCKS</small>
+                    </div>
+                    <div id="count3dCard" class="count-card">
+                        <span>CUBE VOLUME</span>
+                        <strong id="count3dLabel">5 x 5 x 5 = 125</strong>
+                        <small>BLOCKS</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="viewport">
+                <div class="label-top">DISPLAY</div>
+                <div class="grid-bg"></div>
+                <div class="screen-title">VISUAL OUTPUT</div>
+                <div id="visual" class="object-wrap"></div>
+                <div class="screen-readout">
+                    <span id="countLabel">BLOCKS 25</span><br />
+                    <span id="readoutLabel">EDGE 5 / MAX 40</span><br />
+                    <span id="fpsLabel">FPS 0</span>
+                </div>
+                <div class="viewer-controls">
+                    <button
+                        id="rotationToggle"
+                        class="viewer-toggle"
+                        type="button"
+                        aria-label="Stop rotation"
+                    >
+                        ■
+                    </button>
+                    <button
+                        id="speedCycleButton"
+                        class="viewer-speed-cycle"
+                        type="button"
+                        aria-label="Rotation speed x1"
+                    >
+                        x1
+                    </button>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>
