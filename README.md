@@ -5,6 +5,10 @@
 
 This is a pure HTML, CSS, and JavaScript learning tool that helps children see how a square grows into area and how a cube grows into volume. The interface uses a spacecraft instrument-panel style: high-contrast terminal typography, green display lines, measurement guides, rotation controls, and live visual feedback.
 
+## Screenshot
+
+![Square Cube Calculator screenshot](assets/screenshot.png)
+
 ## Features
 
 - Visualizes square area as `edge x edge`.
@@ -52,6 +56,10 @@ This tool is designed for young children who are beginning to understand shape, 
 **콘셉트:** 5세 전후 어린이를 위한 NASA 스타일 정사각형과 큐브 시각화 시뮬레이터.
 
 이 앱은 HTML, CSS, JavaScript만으로 만든 학습 도구입니다. 아이가 정사각형의 넓이가 어떻게 커지는지, 정육면체의 부피가 어떻게 커지는지를 눈으로 볼 수 있게 합니다. 화면은 우주선 계기판 느낌의 디자인을 사용하며, 터미널 폰트, 초록색 계측선, 회전 조작, 실시간 숫자 표시를 제공합니다.
+
+## 스크린샷
+
+![정사각형 큐브 계산기 스크린샷](assets/screenshot.png)
 
 ## 주요 기능
 
