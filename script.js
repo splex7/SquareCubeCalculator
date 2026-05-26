@@ -745,6 +745,11 @@
 
                 closeControlPanel();
             });
+            document.addEventListener("dblclick", (event) => {
+                if (event.target.closest("button, .viewport, .panel")) {
+                    event.preventDefault();
+                }
+            });
             measureToggle.addEventListener("click", toggleMeasurements);
             infoButton.addEventListener("click", openInfoModal);
             infoClose.addEventListener("click", closeInfoModal);
