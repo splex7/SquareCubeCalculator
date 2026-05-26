@@ -419,6 +419,10 @@
                 justify-content: center;
                 transform-style: preserve-3d;
                 perspective: 2200px;
+                -webkit-transform-style: preserve-3d;
+                -webkit-perspective: 2200px;
+                perspective-origin: center center;
+                -webkit-perspective-origin: center center;
                 --scene-scale: 1;
                 --rotation-duration: 14s;
                 --rotation-state: running;
@@ -431,6 +435,28 @@
                 cursor: grab;
             }
 
+            .scene-stage {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+                transform: scale(var(--scene-scale));
+                transform-style: preserve-3d;
+                -webkit-transform-style: preserve-3d;
+                will-change: transform;
+            }
+
+            .object-rotator {
+                position: relative;
+                transform-style: preserve-3d;
+                -webkit-transform-style: preserve-3d;
+                animation: rotateObject var(--rotation-duration) linear infinite;
+                animation-play-state: var(--rotation-state);
+                will-change: transform;
+            }
+
             .object-wrap.is-changing {
                 opacity: 0;
                 filter: blur(8px);
@@ -441,10 +467,8 @@
                 display: grid;
                 gap: 5px;
                 transform-style: preserve-3d;
+                -webkit-transform-style: preserve-3d;
                 --cell-size: 34px;
-                animation: rotateObject var(--rotation-duration) linear infinite;
-                animation-play-state: var(--rotation-state);
-                will-change: transform;
             }
 
             .cell {
@@ -464,21 +488,17 @@
                 width: var(--cube-px);
                 height: var(--cube-px);
                 transform-style: preserve-3d;
+                -webkit-transform-style: preserve-3d;
                 --cube-px: 300px;
                 --grid-count: 5;
-                animation: rotateObject var(--rotation-duration) linear infinite;
-                animation-play-state: var(--rotation-state);
-                will-change: transform;
             }
 
-            .square-grid.manual-rotation,
-            .simple-cube.manual-rotation {
+            .object-rotator.manual-rotation {
                 animation: none;
                 cursor: grabbing;
             }
 
-            .square-grid.returning,
-            .simple-cube.returning {
+            .object-rotator.returning {
                 transition: transform 520ms ease-out;
             }
 
@@ -507,6 +527,7 @@
                     0 0 18px rgba(124, 255, 139, 0.26),
                     inset 0 0 24px rgba(124, 255, 139, 0.08);
                 backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
             }
 
             .simple-face.front {
@@ -798,12 +819,10 @@
 
             @keyframes rotateObject {
                 from {
-                    transform: scale(var(--scene-scale)) rotateX(-24deg)
-                        rotateY(-38deg);
+                    transform: rotateX(-24deg) rotateY(-38deg);
                 }
                 to {
-                    transform: scale(var(--scene-scale)) rotateX(-24deg)
-                        rotateY(322deg);
+                    transform: rotateX(-24deg) rotateY(322deg);
                 }
             }
 

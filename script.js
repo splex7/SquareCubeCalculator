@@ -200,16 +200,15 @@
             }
 
             function getActiveObject() {
-                return visual.querySelector(".simple-cube, .square-grid");
+                return visual.querySelector(".object-rotator");
             }
 
             function applyManualRotation(target) {
-                target.style.transform = `scale(var(--scene-scale)) rotateX(${manualRotateX}deg) rotateY(${manualRotateY}deg)`;
+                target.style.transform = `rotateX(${manualRotateX}deg) rotateY(${manualRotateY}deg)`;
             }
 
             function applyHomeRotation(target) {
-                target.style.transform =
-                    "scale(var(--scene-scale)) rotateX(-24deg) rotateY(-38deg)";
+                target.style.transform = "rotateX(-24deg) rotateY(-38deg)";
             }
 
             function startManualRotation(event) {
@@ -364,7 +363,21 @@
                 return grid;
             }
 
+            function createSceneStage() {
+                const stage = document.createElement("div");
+                stage.className = "scene-stage";
+                return stage;
+            }
+
+            function createRotator() {
+                const rotator = document.createElement("div");
+                rotator.className = "object-rotator";
+                return rotator;
+            }
+
             function render2D(size) {
+                const stage = createSceneStage();
+                const rotator = createRotator();
                 const grid = createGrid(size, "square-grid");
                 const cellSize = get2DCellSize(size);
                 setBaseSceneScale(1);
@@ -380,7 +393,9 @@
                         ),
                     );
                 }
-                visual.appendChild(grid);
+                rotator.appendChild(grid);
+                stage.appendChild(rotator);
+                visual.appendChild(stage);
                 if (showMeasurements) animateDimensionLine(grid, size);
             }
 
@@ -393,6 +408,8 @@
             }
 
             function renderGridCube(size, cubePx, sceneScale) {
+                const stage = createSceneStage();
+                const rotator = createRotator();
                 const cube = document.createElement("div");
                 cube.className = "simple-cube";
                 cube.style.setProperty("--cube-px", `${cubePx}px`);
@@ -411,7 +428,9 @@
                     cube.appendChild(createDimensionLine(size, "FRONT EDGE MEASURE"));
                 }
 
-                visual.appendChild(cube);
+                rotator.appendChild(cube);
+                stage.appendChild(rotator);
+                visual.appendChild(stage);
                 if (showMeasurements) animateDimensionLine(cube, size);
             }
 
