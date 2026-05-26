@@ -1,4 +1,6 @@
-const sizeInput = document.getElementById("sizeInput");
+            const sizeInput = document.getElementById("sizeInput");
+            const menuButton = document.getElementById("menuButton");
+            const controlPanel = document.getElementById("controlPanel");
             const mode2d = document.getElementById("mode2d");
             const mode3d = document.getElementById("mode3d");
             const visual = document.getElementById("visual");
@@ -32,8 +34,14 @@ const sizeInput = document.getElementById("sizeInput");
             let manualRotateY = -38;
             let startRotateX = manualRotateX;
             let startRotateY = manualRotateY;
+            let baseSceneScale = 1;
+            let userZoom = 1;
+            let isPinching = false;
+            let pinchStartDistance = 0;
+            let pinchStartZoom = 1;
             let frameCount = 0;
             let lastFpsTime = performance.now();
+            const activePointers = new Map();
             const max2dSize = 40;
             const max3dSize = 80;
             const storageKey = "blockVisualizerSettings";
@@ -179,6 +187,15 @@ const sizeInput = document.getElementById("sizeInput");
                 );
             }
 
+            function applySceneScale() {
+                visual.style.setProperty("--scene-scale", baseSceneScale * userZoom);
+            }
+
+            function setBaseSceneScale(scale) {
+                baseSceneScale = scale;
+                applySceneScale();
+            }
+
             function getActiveObject() {
                 return visual.querySelector(".simple-cube, .square-grid");
             }
@@ -196,24 +213,58 @@ const sizeInput = document.getElementById("sizeInput");
                 const target = getActiveObject();
                 if (!target) return;
 
+                activePointers.set(event.pointerId, {
+                    x: event.clientX,
+                    y: event.clientY,
+                });
+                visual.setPointerCapture?.(event.pointerId);
                 clearTimeout(resumeRotationTimer);
+                visual.style.setProperty("--rotation-state", "paused");
+                target.classList.remove("returning");
+                target.classList.add("manual-rotation");
+
+                if (activePointers.size >= 2) {
+                    const points = [...activePointers.values()];
+                    isDragging = false;
+                    isPinching = true;
+                    pinchStartDistance = getPointerDistance(points[0], points[1]);
+                    pinchStartZoom = userZoom;
+                    applyManualRotation(target);
+                    return;
+                }
+
                 isDragging = true;
                 dragStartX = event.clientX;
                 dragStartY = event.clientY;
                 startRotateX = manualRotateX;
                 startRotateY = manualRotateY;
-                visual.style.setProperty("--rotation-state", "paused");
-                target.classList.remove("returning");
-                target.classList.add("manual-rotation");
                 applyManualRotation(target);
-                visual.setPointerCapture?.(event.pointerId);
             }
 
             function moveManualRotation(event) {
-                if (!isDragging) return;
-
                 const target = getActiveObject();
                 if (!target) return;
+
+                if (activePointers.has(event.pointerId)) {
+                    activePointers.set(event.pointerId, {
+                        x: event.clientX,
+                        y: event.clientY,
+                    });
+                }
+
+                if (isPinching && activePointers.size >= 2) {
+                    const points = [...activePointers.values()];
+                    const distance = getPointerDistance(points[0], points[1]);
+                    if (pinchStartDistance <= 0) return;
+
+                    const nextZoom = pinchStartZoom * (distance / pinchStartDistance);
+                    userZoom = Math.max(0.65, Math.min(1.8, nextZoom));
+                    applySceneScale();
+                    applyManualRotation(target);
+                    return;
+                }
+
+                if (!isDragging) return;
 
                 const dx = event.clientX - dragStartX;
                 const dy = event.clientY - dragStartY;
@@ -223,15 +274,32 @@ const sizeInput = document.getElementById("sizeInput");
             }
 
             function finishManualRotation(event) {
-                if (!isDragging) return;
-
                 const target = getActiveObject();
+                activePointers.delete(event.pointerId);
                 isDragging = false;
                 visual.releasePointerCapture?.(event.pointerId);
 
-                resumeRotationTimer = setTimeout(() => {
-                    if (!target) return;
+                if (isPinching && activePointers.size >= 2) return;
 
+                if (isPinching) {
+                    isPinching = false;
+                    scheduleReturnToHome(target);
+                    return;
+                }
+
+                if (!target) return;
+
+                scheduleReturnToHome(target);
+            }
+
+            function getPointerDistance(first, second) {
+                return Math.hypot(first.x - second.x, first.y - second.y);
+            }
+
+            function scheduleReturnToHome(target) {
+                if (!target) return;
+
+                resumeRotationTimer = setTimeout(() => {
                     target.classList.add("returning");
                     applyHomeRotation(target);
 
@@ -254,12 +322,24 @@ const sizeInput = document.getElementById("sizeInput");
             }
 
             function get2DCellSize(size) {
-                const maxGridSize = 460;
+                const maxGridSize = getVisualLimit();
                 const gap = 5;
                 return Math.max(
                     6,
                     Math.floor((maxGridSize - gap * (size - 1)) / size),
                 );
+            }
+
+            function getVisualLimit() {
+                const bounds = visual.getBoundingClientRect();
+                const inset = window.matchMedia("(max-width: 840px)").matches
+                    ? 160
+                    : 96;
+                const minimum = window.matchMedia("(max-width: 840px)").matches
+                    ? 160
+                    : 220;
+                const available = Math.min(bounds.width, bounds.height) - inset;
+                return Math.min(460, Math.max(minimum, available));
             }
 
             function makeCell() {
@@ -284,6 +364,7 @@ const sizeInput = document.getElementById("sizeInput");
             function render2D(size) {
                 const grid = createGrid(size, "square-grid");
                 const cellSize = get2DCellSize(size);
+                setBaseSceneScale(1);
                 grid.style.setProperty("--cell-size", `${cellSize}px`);
                 grid.style.gridTemplateColumns = `repeat(${size}, ${cellSize}px)`;
                 grid.style.gridTemplateRows = `repeat(${size}, ${cellSize}px)`;
@@ -301,8 +382,9 @@ const sizeInput = document.getElementById("sizeInput");
             }
 
             function render3D(size) {
-                const cubePx = Math.min(420, 150 + size * 22);
-                const sceneScale = Math.min(1, 430 / cubePx);
+                const visualLimit = getVisualLimit();
+                const cubePx = Math.min(420, visualLimit, 150 + size * 22);
+                const sceneScale = Math.min(1, visualLimit / cubePx);
 
                 renderGridCube(size, cubePx, sceneScale);
             }
@@ -312,7 +394,7 @@ const sizeInput = document.getElementById("sizeInput");
                 cube.className = "simple-cube";
                 cube.style.setProperty("--cube-px", `${cubePx}px`);
                 cube.style.setProperty("--grid-count", size);
-                visual.style.setProperty("--scene-scale", sceneScale);
+                setBaseSceneScale(sceneScale);
 
                 ["front", "back", "right", "left", "top", "bottom"].forEach(
                     (faceName) => {
@@ -428,8 +510,10 @@ const sizeInput = document.getElementById("sizeInput");
                     clearTimeout(resumeRotationTimer);
                     clearInterval(dimensionTimer);
                     isDragging = false;
+                    isPinching = false;
+                    activePointers.clear();
                     visual.innerHTML = "";
-                    visual.style.setProperty("--scene-scale", "1");
+                    setBaseSceneScale(1);
 
                     if (mode === "2d") {
                         render2D(size);
@@ -515,11 +599,43 @@ const sizeInput = document.getElementById("sizeInput");
                 return infoModal.classList.contains("is-open");
             }
 
+            function openControlPanel() {
+                document.body.classList.add("panel-open");
+                menuButton.setAttribute("aria-expanded", "true");
+                controlPanel.focus();
+            }
+
+            function closeControlPanel() {
+                document.body.classList.remove("panel-open");
+                menuButton.setAttribute("aria-expanded", "false");
+                menuButton.focus();
+            }
+
+            function isControlPanelOpen() {
+                return document.body.classList.contains("panel-open");
+            }
+
+            function toggleControlPanel() {
+                if (isControlPanelOpen()) {
+                    closeControlPanel();
+                } else {
+                    openControlPanel();
+                }
+            }
+
             function handleKeyboardShortcuts(event) {
                 if (isInfoModalOpen()) {
                     if (event.key === "Escape") {
                         event.preventDefault();
                         closeInfoModal();
+                    }
+                    return;
+                }
+
+                if (isControlPanelOpen()) {
+                    if (event.key === "Escape") {
+                        event.preventDefault();
+                        closeControlPanel();
                     }
                     return;
                 }
@@ -577,6 +693,18 @@ const sizeInput = document.getElementById("sizeInput");
             rotationToggle.addEventListener("click", toggleRotation);
             speedCycleButton.addEventListener("click", () => {
                 setSpeedLevel(speedLevel === 4 ? 1 : speedLevel + 1);
+            });
+            menuButton.addEventListener("click", toggleControlPanel);
+            document.addEventListener("pointerdown", (event) => {
+                if (!isControlPanelOpen()) return;
+                if (
+                    controlPanel.contains(event.target) ||
+                    menuButton.contains(event.target)
+                ) {
+                    return;
+                }
+
+                closeControlPanel();
             });
             measureToggle.addEventListener("click", toggleMeasurements);
             infoButton.addEventListener("click", openInfoModal);

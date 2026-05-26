@@ -9,6 +9,17 @@
     </head>
     <body>
         <button
+            id="menuButton"
+            class="menu-button"
+            type="button"
+            aria-label="Open control panel"
+            aria-expanded="false"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <button
             id="infoButton"
             class="info-button"
             type="button"
@@ -17,7 +28,12 @@
             i
         </button>
         <main class="app">
-            <section class="panel">
+            <section
+                id="controlPanel"
+                class="panel"
+                aria-label="Control panel"
+                tabindex="-1"
+            >
                 <div class="label-top">CONTROL</div>
                 <h1>SQUARE<br />CUBE CALCULATOR</h1>
                 <div class="subtitle">AREA AND VOLUME VISUALIZER</div>

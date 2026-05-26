@@ -18,7 +18,9 @@ This is a pure HTML, CSS, and JavaScript learning tool that helps children see h
 - Includes square and cube edge measurement guides so children can feel the meaning of edge length.
 - Provides an eye toggle for showing or hiding measurement guides.
 - Supports mouse and touch drag rotation for the 3D object.
+- Supports pinch zoom on touch screens.
 - Automatically resumes rotation after interaction.
+- Uses a mobile-friendly hamburger control panel on small screens.
 - Provides play/pause and speed cycle controls.
 - Shows keyboard shortcuts in a NASA-style info modal.
 - Provides keyboard shortcuts for fast control.
@@ -32,6 +34,7 @@ This is a pure HTML, CSS, and JavaScript learning tool that helps children see h
 2. Enter an edge length.
 3. Choose `SQUARE` or `CUBE`.
 4. Watch the visual output and compare the total block count.
+5. On mobile, open controls with the hamburger button and pinch the visual output to zoom.
 
 ## Keyboard Shortcuts
 
@@ -72,7 +75,9 @@ This tool is designed for young children who are beginning to understand shape, 
 - 정사각형과 큐브 한 변의 길이를 계측선으로 보여줘서 길이 변화를 직관적으로 느낄 수 있습니다.
 - 눈 아이콘 토글로 계측선을 보이거나 숨길 수 있습니다.
 - 마우스와 터치로 3D 물체를 직접 회전할 수 있습니다.
+- 터치 화면에서 핀치 줌을 지원합니다.
 - 조작이 끝나면 자동 회전이 다시 시작됩니다.
+- 작은 화면에서는 햄버거 버튼으로 컨트롤 패널을 열 수 있습니다.
 - 재생/정지 버튼과 회전 속도 순환 버튼을 제공합니다.
 - NASA 스타일 정보 모달에서 키보드 단축키를 확인할 수 있습니다.
 - 빠른 조작을 위한 키보드 단축키를 제공합니다.
@@ -86,6 +91,7 @@ This tool is designed for young children who are beginning to understand shape, 
 2. 한 변의 블록 개수를 입력합니다.
 3. `SQUARE` 또는 `CUBE`를 선택합니다.
 4. 화면의 모양과 전체 블록 개수를 비교합니다.
+5. 모바일에서는 햄버거 버튼으로 조작 패널을 열고, 시각화 영역을 핀치해서 확대/축소합니다.
 
 ## 키보드 단축키
 
