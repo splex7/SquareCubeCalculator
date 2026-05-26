@@ -8,6 +8,9 @@
             const countLabel = document.getElementById("countLabel");
             const readoutLabel = document.getElementById("readoutLabel");
             const fpsLabel = document.getElementById("fpsLabel");
+            const mobileSizeDown = document.getElementById("mobileSizeDown");
+            const mobileSizeUp = document.getElementById("mobileSizeUp");
+            const mobileSizeValue = document.getElementById("mobileSizeValue");
             const count2dCard = document.getElementById("count2dCard");
             const count3dCard = document.getElementById("count3dCard");
             const count2dLabel = document.getElementById("count2dLabel");
@@ -478,6 +481,7 @@
 
                 countLabel.textContent = `BLOCKS ${formatNumber(blockCount)}`;
                 readoutLabel.textContent = `EDGE ${formatNumber(size)} / MAX ${maxSize}`;
+                mobileSizeValue.textContent = formatNumber(size);
                 count2dLabel.textContent = `${formatNumber(size)} x ${formatNumber(size)} = ${formatNumber(count2d)}`;
                 count3dLabel.textContent = `${formatNumber(size)} x ${formatNumber(size)} x ${formatNumber(size)} = ${formatNumber(count3d)}`;
                 count2dCard.classList.toggle("active", mode === "2d");
@@ -693,6 +697,12 @@
             rotationToggle.addEventListener("click", toggleRotation);
             speedCycleButton.addEventListener("click", () => {
                 setSpeedLevel(speedLevel === 4 ? 1 : speedLevel + 1);
+            });
+            mobileSizeDown.addEventListener("click", () => {
+                changeSize(-1);
+            });
+            mobileSizeUp.addEventListener("click", () => {
+                changeSize(1);
             });
             menuButton.addEventListener("click", toggleControlPanel);
             document.addEventListener("pointerdown", (event) => {

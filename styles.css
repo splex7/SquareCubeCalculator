@@ -317,6 +317,10 @@
                 text-align: right;
             }
 
+            .mobile-size-controls {
+                display: none;
+            }
+
             .viewer-controls {
                 position: absolute;
                 left: 20px;
@@ -867,10 +871,59 @@
                     height: 100%;
                 }
 
+                .mobile-size-controls {
+                    position: absolute;
+                    top: 18px;
+                    right: 14px;
+                    z-index: 4;
+                    display: grid;
+                    grid-template-columns: 38px 56px 38px;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 8px;
+                    border: 1px solid var(--green-dim);
+                    background: rgba(0, 8, 0, 0.88);
+                    box-shadow:
+                        0 0 14px rgba(124, 255, 139, 0.12),
+                        inset 0 0 18px rgba(124, 255, 139, 0.06);
+                }
+
+                .mobile-size-button {
+                    width: 38px;
+                    height: 38px;
+                    border: 1px solid var(--green);
+                    background: var(--black);
+                    color: var(--green);
+                    font-family: inherit;
+                    font-size: 22px;
+                    line-height: 1;
+                    cursor: pointer;
+                }
+
+                .mobile-size-readout {
+                    min-width: 56px;
+                    padding: 0 2px;
+                    text-align: center;
+                }
+
+                .mobile-size-label {
+                    display: block;
+                    color: var(--green-dim);
+                    font-size: 10px;
+                    letter-spacing: 1px;
+                }
+
+                .mobile-size-readout strong {
+                    display: block;
+                    color: var(--green);
+                    font-size: 22px;
+                    line-height: 1.1;
+                }
+
                 .info-button {
                     top: 18px;
                     right: auto;
-                    left: 72px;
+                    left: 76px;
                 }
 
                 .object-wrap {
@@ -888,6 +941,7 @@
                 .screen-readout {
                     right: 14px;
                     bottom: 14px;
+                    max-width: 96px;
                 }
 
                 .shortcut-row {
