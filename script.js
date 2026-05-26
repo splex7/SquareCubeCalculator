@@ -44,6 +44,7 @@
             let pinchStartZoom = 1;
             let frameCount = 0;
             let lastFpsTime = performance.now();
+            let lastTouchEndTime = 0;
             const activePointers = new Map();
             const max2dSize = 40;
             const max3dSize = 80;
@@ -750,6 +751,25 @@
                     event.preventDefault();
                 }
             });
+            document.addEventListener(
+                "touchend",
+                (event) => {
+                    if (
+                        event.target instanceof HTMLElement &&
+                        event.target.closest("input, textarea, select")
+                    ) {
+                        lastTouchEndTime = Date.now();
+                        return;
+                    }
+
+                    const now = Date.now();
+                    if (now - lastTouchEndTime <= 300) {
+                        event.preventDefault();
+                    }
+                    lastTouchEndTime = now;
+                },
+                { passive: false },
+            );
             measureToggle.addEventListener("click", toggleMeasurements);
             infoButton.addEventListener("click", openInfoModal);
             infoClose.addEventListener("click", closeInfoModal);
