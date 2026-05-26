@@ -375,9 +375,16 @@
                 return rotator;
             }
 
+            function createObjectBody() {
+                const body = document.createElement("div");
+                body.className = "object-body";
+                return body;
+            }
+
             function render2D(size) {
                 const stage = createSceneStage();
                 const rotator = createRotator();
+                const body = createObjectBody();
                 const grid = createGrid(size, "square-grid");
                 const cellSize = get2DCellSize(size);
                 setBaseSceneScale(1);
@@ -393,7 +400,8 @@
                         ),
                     );
                 }
-                rotator.appendChild(grid);
+                body.appendChild(grid);
+                rotator.appendChild(body);
                 stage.appendChild(rotator);
                 visual.appendChild(stage);
                 if (showMeasurements) animateDimensionLine(grid, size);
@@ -410,6 +418,7 @@
             function renderGridCube(size, cubePx, sceneScale) {
                 const stage = createSceneStage();
                 const rotator = createRotator();
+                const body = createObjectBody();
                 const cube = document.createElement("div");
                 cube.className = "simple-cube";
                 cube.style.setProperty("--cube-px", `${cubePx}px`);
@@ -428,7 +437,8 @@
                     cube.appendChild(createDimensionLine(size, "FRONT EDGE MEASURE"));
                 }
 
-                rotator.appendChild(cube);
+                body.appendChild(cube);
+                rotator.appendChild(body);
                 stage.appendChild(rotator);
                 visual.appendChild(stage);
                 if (showMeasurements) animateDimensionLine(cube, size);

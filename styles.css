@@ -442,6 +442,12 @@
                 justify-content: center;
                 width: 100%;
                 height: 100%;
+                transform-style: preserve-3d;
+                -webkit-transform-style: preserve-3d;
+            }
+
+            .object-body {
+                position: relative;
                 transform: scale(var(--scene-scale));
                 transform-style: preserve-3d;
                 -webkit-transform-style: preserve-3d;
