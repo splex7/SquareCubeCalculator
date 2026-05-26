@@ -45,10 +45,23 @@
             let frameCount = 0;
             let lastFpsTime = performance.now();
             let lastTouchEndTime = 0;
+            let uiLockTimer;
             const activePointers = new Map();
             const max2dSize = 40;
             const max3dSize = 80;
             const storageKey = "blockVisualizerSettings";
+            const temporaryLockTargets = [
+                sizeInput,
+                mode2d,
+                mode3d,
+                mobileSizeDown,
+                mobileSizeUp,
+                rotationToggle,
+                speedCycleButton,
+                measureToggle,
+                menuButton,
+                infoButton,
+            ];
 
             function getMaxSize() {
                 if (mode === "2d") return max2dSize;
@@ -617,6 +630,26 @@
                 render();
             }
 
+            function setUiTemporarilyLocked(isLocked) {
+                document.body.classList.toggle("ui-locked", isLocked);
+                temporaryLockTargets.forEach((element) => {
+                    if (!element) return;
+                    if (element === sizeInput) {
+                        element.readOnly = isLocked;
+                        return;
+                    }
+                    element.disabled = isLocked;
+                });
+            }
+
+            function lockUiForTapBurst() {
+                clearTimeout(uiLockTimer);
+                setUiTemporarilyLocked(true);
+                uiLockTimer = setTimeout(() => {
+                    setUiTemporarilyLocked(false);
+                }, 500);
+            }
+
             function openInfoModal() {
                 infoModal.classList.add("is-open");
                 infoModal.setAttribute("aria-hidden", "false");
@@ -729,9 +762,11 @@
                 setSpeedLevel(speedLevel === 4 ? 1 : speedLevel + 1);
             });
             mobileSizeDown.addEventListener("click", () => {
+                lockUiForTapBurst();
                 changeSize(-1);
             });
             mobileSizeUp.addEventListener("click", () => {
+                lockUiForTapBurst();
                 changeSize(1);
             });
             menuButton.addEventListener("click", toggleControlPanel);
