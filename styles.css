@@ -275,6 +275,12 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                perspective: 1600px;
+                -webkit-perspective: 1600px;
+                perspective-origin: center center;
+                -webkit-perspective-origin: center center;
+                transform-style: preserve-3d;
+                -webkit-transform-style: preserve-3d;
             }
 
             .grid-bg {
@@ -418,21 +424,20 @@
                 align-items: center;
                 justify-content: center;
                 transform-style: preserve-3d;
-                perspective: 2200px;
                 -webkit-transform-style: preserve-3d;
-                -webkit-perspective: 2200px;
-                perspective-origin: center center;
-                -webkit-perspective-origin: center center;
                 --scene-scale: 1;
                 --rotation-duration: 14s;
                 --rotation-state: running;
+                transform: scale(var(--scene-scale));
                 opacity: 1;
                 z-index: 1;
                 transition:
+                    transform 180ms ease,
                     opacity 180ms ease,
                     filter 180ms ease;
                 touch-action: none;
                 cursor: grab;
+                will-change: transform;
             }
 
             .scene-stage {
@@ -448,10 +453,8 @@
 
             .object-body {
                 position: relative;
-                transform: scale(var(--scene-scale));
                 transform-style: preserve-3d;
                 -webkit-transform-style: preserve-3d;
-                will-change: transform;
             }
 
             .object-rotator {
@@ -495,6 +498,7 @@
                 height: var(--cube-px);
                 transform-style: preserve-3d;
                 -webkit-transform-style: preserve-3d;
+                will-change: transform;
                 --cube-px: 300px;
                 --grid-count: 5;
             }
@@ -892,8 +896,13 @@
                 }
 
                 .viewport {
+                    overflow: visible;
                     min-height: 0;
                     height: 100%;
+                    perspective: 1100px;
+                    -webkit-perspective: 1100px;
+                    perspective-origin: center center;
+                    -webkit-perspective-origin: center center;
                 }
 
                 .mobile-size-controls {
