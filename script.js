@@ -3,6 +3,8 @@
             const controlPanel = document.getElementById("controlPanel");
             const mode2d = document.getElementById("mode2d");
             const mode3d = document.getElementById("mode3d");
+            const colorGreen = document.getElementById("colorGreen");
+            const colorWhite = document.getElementById("colorWhite");
             const visual = document.getElementById("visual");
             const warning = document.getElementById("warning");
             const countLabel = document.getElementById("countLabel");
@@ -26,6 +28,7 @@
             let isRotationPlaying = true;
             let showMeasurements = true;
             let speedLevel = 1;
+            let accentColor = "green";
             let audioContext;
             let renderTimer;
             let dimensionTimer;
@@ -54,6 +57,8 @@
                 sizeInput,
                 mode2d,
                 mode3d,
+                colorGreen,
+                colorWhite,
                 mobileSizeDown,
                 mobileSizeUp,
                 rotationToggle,
@@ -89,6 +94,7 @@
                     speedLevel,
                     isRotationPlaying,
                     showMeasurements,
+                    accentColor,
                 };
 
                 localStorage.setItem(storageKey, JSON.stringify(settings));
@@ -103,11 +109,14 @@
                     mode = settings.mode === "3d" ? "3d" : "2d";
                     isRotationPlaying = settings.isRotationPlaying !== false;
                     showMeasurements = settings.showMeasurements !== false;
+                    accentColor =
+                        settings.accentColor === "white" ? "white" : "green";
                     speedLevel = getSavedSpeedLevel(settings);
                     sizeInput.max = getMaxSize();
                     sizeInput.value = clampSize(settings.size || 5);
                     mode2d.classList.toggle("active", mode === "2d");
                     mode3d.classList.toggle("active", mode === "3d");
+                    updateAccentColor();
                 } catch {
                     localStorage.removeItem(storageKey);
                 }
@@ -206,6 +215,15 @@
 
             function applySceneScale() {
                 visual.style.setProperty("--scene-scale", baseSceneScale * userZoom);
+            }
+
+            function updateAccentColor() {
+                document.body.classList.toggle(
+                    "white-accent",
+                    accentColor === "white",
+                );
+                colorGreen.classList.toggle("active", accentColor === "green");
+                colorWhite.classList.toggle("active", accentColor === "white");
             }
 
             function setBaseSceneScale(scale) {
@@ -596,6 +614,15 @@
                 render();
             }
 
+            function selectAccentColor(nextColor) {
+                if (nextColor === accentColor) return;
+
+                accentColor = nextColor === "white" ? "white" : "green";
+                playSound("mode");
+                updateAccentColor();
+                saveSettings();
+            }
+
             function toggleRotation() {
                 isRotationPlaying = !isRotationPlaying;
                 playSound("mode");
@@ -752,6 +779,12 @@
             mode3d.addEventListener("click", () => {
                 selectMode("3d");
             });
+            colorGreen.addEventListener("click", () => {
+                selectAccentColor("green");
+            });
+            colorWhite.addEventListener("click", () => {
+                selectAccentColor("white");
+            });
 
             sizeInput.addEventListener("input", () => {
                 if (sizeInput.value !== "") playSound("input");
@@ -789,19 +822,18 @@
             document.addEventListener(
                 "touchend",
                 (event) => {
-                    if (
-                        event.target instanceof HTMLElement &&
-                        event.target.closest("input, textarea, select")
-                    ) {
-                        lastTouchEndTime = Date.now();
-                        return;
-                    }
-
                     const now = Date.now();
                     if (now - lastTouchEndTime <= 300) {
                         event.preventDefault();
                     }
                     lastTouchEndTime = now;
+                },
+                { passive: false },
+            );
+            document.addEventListener(
+                "gesturestart",
+                (event) => {
+                    event.preventDefault();
                 },
                 { passive: false },
             );
@@ -826,6 +858,7 @@
             window.addEventListener("keydown", handleKeyboardShortcuts);
 
             loadSettings();
+            updateAccentColor();
             render();
             updateRotationSpeed();
             updateMeasurementToggle();

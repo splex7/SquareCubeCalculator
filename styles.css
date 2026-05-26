@@ -40,6 +40,12 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
+body.white-accent {
+    --green: #eeeeee;
+    --green-dim: #9a9a9a;
+    --line: #696969;
+}
+
 .app {
     height: 100vh;
     height: 100dvh;
